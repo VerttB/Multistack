@@ -1,5 +1,7 @@
 import { CreateUserDTO, UpdateUserDTO } from "../dto/user";
 import prisma from "../core/utils/prismaClient";
+import fastifyJwt from "@fastify/jwt";
+import bcrypt from 'bcrypt';
 export const userService = () => ({
 
   findAll: async () => {
@@ -14,9 +16,12 @@ export const userService = () => ({
   },
 
   create: async (data: CreateUserDTO) => {
+    data.password = await bcrypt.hash(data.password, 10);
     return prisma.user.create({
       data,
     });
+
+    
   },
 
   update: async (id: string, data: Partial<UpdateUserDTO>) => {

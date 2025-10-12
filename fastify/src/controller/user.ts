@@ -19,10 +19,13 @@ export const getUserById = async (request: FastifyRequest, reply: FastifyReply) 
 }
 
 export const createUser = async (request: FastifyRequest, reply: FastifyReply) => {
+    
     const newUser = request.body as CreateUserDTO;
     const createdUser = await userServiceInstance.create(newUser);
-    reply.status(201).send(createdUser);
-}
+    const token = await reply.jwtSign({ id: createdUser.id, email: createdUser.email });
+    reply.status(201).send({createdUser, token});    
+};
+
 
 export const updateUser = async (request: FastifyRequest, reply: FastifyReply) => {
     const { id } = request.params as { id: string };
@@ -33,6 +36,7 @@ export const updateUser = async (request: FastifyRequest, reply: FastifyReply) =
 
 export const deleteUser = async (request: FastifyRequest, reply: FastifyReply) => {
     const { id } = request.params as { id: string };
+    console.log("USER ID" , id);
     await userServiceInstance.delete(id);
-    reply.status(204).send();
+    reply.status(204).send({ message: 'User deleted successfully' });
 }

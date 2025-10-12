@@ -3,7 +3,7 @@ import { createUser, deleteUser, getUserById, getUsers, updateUser } from "../co
 
 
 async function userRoutes(server: FastifyInstance) {
-    server.get('',getUsers);
+    server.get('', getUsers);
 
     server.get('/:id', getUserById);
     
@@ -12,6 +12,7 @@ async function userRoutes(server: FastifyInstance) {
     server.patch('/:id', updateUser);
 
     server.delete('/:id', deleteUser);
+    
     }
 
 export default userRoutes;

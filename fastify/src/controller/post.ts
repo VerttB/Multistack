@@ -20,7 +20,12 @@ export const getPostById = async (request: FastifyRequest, reply: FastifyReply) 
 }
 
 export const createPost = async (request: FastifyRequest, reply: FastifyReply) => {
-    const newPost = request.body as CreatePostDTO;
+    const user = request.user as { id: string, email: string };
+    console.log("USER", user);  
+    const newPost = {
+        ...(request.body as CreatePostDTO),
+        authorId: user.id, 
+    };
     const createdPost = await postsServiceInstance.create(newPost);
     reply.status(201).send(createdPost);
 }

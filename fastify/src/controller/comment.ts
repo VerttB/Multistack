@@ -34,5 +34,5 @@ export const updateComment = async (request: FastifyRequest, reply: FastifyReply
 export const deleteComment = async (request: FastifyRequest, reply: FastifyReply) => {
     const { id } = request.params as { id: string };
     await commentServiceInstance.delete(id);
-    reply.status(204).send();
+    reply.status(204).send({ message: 'Comment deleted successfully' });
 }

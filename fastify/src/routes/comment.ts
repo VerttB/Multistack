@@ -1,5 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { getCommentById, getComments, createComment, deleteComment, updateComment } from "../controller/comment";
+import { verifyJWT } from "../core/config/jwt";
 
 
 async function commentRoutes(server: FastifyInstance) {
@@ -7,11 +8,11 @@ async function commentRoutes(server: FastifyInstance) {
 
     server.get('/:id', getCommentById);
 
-    server.post('', createComment);
+    server.post('',{ preHandler: verifyJWT }, createComment);
 
-    server.delete('/:id', deleteComment);
+    server.delete('/:id', { preHandler: verifyJWT }, deleteComment);
 
-    server.patch('/:id', updateComment);
+    server.patch('/:id', { preHandler: verifyJWT }, updateComment);
 
 }
 
