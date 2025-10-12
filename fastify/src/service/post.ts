@@ -15,7 +15,14 @@ export const postService = () => ({
             data
         });
     },
-    update: async (id: string, data: UpdatePostDTO) => {
+    update: async (id: string,userId: string, data: UpdatePostDTO) => {
+        const post = await prisma.post.findUnique({
+            where: { id }
+        });
+        
+        if (!post || post.authorId !== userId) {
+            throw new Error('Post not found or not authorized');
+        }
         return await prisma.post.update({
             where: { id },
             data

@@ -5,10 +5,11 @@ import prismaPlugin from './db/prisma';
 import commentRoutes from './routes/comment';
 import jwt from '@fastify/jwt'
 import dotenv from 'dotenv';
+import authRoutes from './routes/auth';
 
 dotenv.config();
 
-const fastify = Fastify({ logger: true });
+const fastify = Fastify({ logger: { level: 'info' } });
 
 
 
@@ -19,6 +20,7 @@ fastify.register(jwt, {
     expiresIn: '1h'
   },
 });
+
 
  fastify.register(require('@fastify/swagger'), {
       swagger: {
@@ -41,6 +43,7 @@ fastify.register(require('@fastify/swagger-ui'), {
 
 
 fastify.register(prismaPlugin);
+fastify.register(authRoutes, { prefix: '/auth' });
 fastify.register(userRoutes, { prefix: '/users' , name: 'Users' });
 fastify.register(postRoutes, { prefix: '/posts' });
 fastify.register(commentRoutes, { prefix: '/comments' });

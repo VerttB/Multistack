@@ -31,9 +31,13 @@ export const createPost = async (request: FastifyRequest, reply: FastifyReply) =
 }
 
 export const updatePost = async (request: FastifyRequest, reply: FastifyReply) => {
+    console.log("UPDATING_POST");
     const { id } = request.params as { id: string };
+    console.log("ID_POST", id);
+    const user = request.user as { id: string, email: string };
+    console.log("USER", user);
     const updateData = request.body as Partial<CreatePostDTO>;
-    const updatedPost = await postsServiceInstance.update(id, updateData);
+    const updatedPost = await postsServiceInstance.update(id, user.id, updateData);
     reply.status(200).send(updatedPost);
 }
 

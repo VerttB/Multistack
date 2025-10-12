@@ -9,9 +9,9 @@ async function postRoutes(server: FastifyInstance) {
 
     server.post('',{ preHandler: verifyJWT }, createPost);
 
-    server.delete('/:id', deletePost);
+    server.delete('/:id', { preHandler: verifyJWT }, deletePost);
 
-    server.patch('/:id', updatePost);
+    server.patch('/:id',{ preHandler: verifyJWT }, updatePost);
 
 }
 
