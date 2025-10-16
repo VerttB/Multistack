@@ -1,9 +1,9 @@
+-- CreateEnum
 CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN');
-
 
 -- CreateTable
 CREATE TABLE "User" (
-    "id" UUID DEFAULT gen_random_uuid(),
+    "id" UUID NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE "User" (
 
 -- CreateTable
 CREATE TABLE "Post" (
-    "id" UUID DEFAULT gen_random_uuid(),
+    "id" UUID NOT NULL,
     "title" TEXT NOT NULL,
     "content" TEXT NOT NULL,
     "published" BOOLEAN NOT NULL DEFAULT false,
@@ -29,7 +29,7 @@ CREATE TABLE "Post" (
 
 -- CreateTable
 CREATE TABLE "Comment" (
-    "id" UUID  DEFAULT gen_random_uuid(),
+    "id" UUID NOT NULL,
     "content" TEXT NOT NULL,
     "postId" UUID NOT NULL,
     "authorId" UUID NOT NULL,

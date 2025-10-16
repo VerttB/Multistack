@@ -3,8 +3,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
 generator client {
   provider = "prisma-client-js"
+}
+
+
+enum Role {
+  USER
+  ADMIN
 }
 
 model User {
@@ -12,7 +19,7 @@ model User {
   name      String
   email     String   @unique
   password  String
-  role      String   @default("USER")
+  role      Role   @default(USER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   posts     Post[]

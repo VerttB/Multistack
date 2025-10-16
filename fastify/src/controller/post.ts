@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { postService } from "../service/post";
 import { CreatePostDTO, UpdatePostDTO, PostResponseDTO } from "../dto/post";
 import user from "../routes/user";
+import { checkPermission } from "../core/permissions/permissions";
 const postsServiceInstance = postService();
 
 export const getPosts = async (request: FastifyRequest, reply: FastifyReply) => {
@@ -21,7 +22,6 @@ export const getPostById = async (request: FastifyRequest, reply: FastifyReply) 
 
 export const createPost = async (request: FastifyRequest, reply: FastifyReply) => {
     const user = request.user as { id: string, email: string };
-    console.log("USER", user);  
     const newPost = {
         ...(request.body as CreatePostDTO),
         authorId: user.id, 
@@ -31,11 +31,9 @@ export const createPost = async (request: FastifyRequest, reply: FastifyReply) =
 }
 
 export const updatePost = async (request: FastifyRequest, reply: FastifyReply) => {
-    console.log("UPDATING_POST");
     const { id } = request.params as { id: string };
-    console.log("ID_POST", id);
-    const user = request.user as { id: string, email: string };
-    console.log("USER", user);
+    const user = request.user as { id: string, email: string, role: string };
+    checkPermission(user.role, 'update', 'post', user.id);
     const updateData = request.body as Partial<CreatePostDTO>;
     const updatedPost = await postsServiceInstance.update(id, user.id, updateData);
     reply.status(200).send(updatedPost);
