@@ -1,4 +1,5 @@
 import { AppError } from "../core/errors/AppError";
+import { NotFoundError } from "../core/errors/exceptions";
 import { checkPermission } from "../core/permissions/permissions";
 import prisma from "../core/utils/prismaClient";
 
@@ -24,7 +25,7 @@ export const commentService = () => ({
         });
 
         if (!comment) {
-            throw new AppError('Comment not found', 404);
+            throw new NotFoundError('Comment not found');
         }
 
         checkPermission(user.role,"update","comment", user.id, comment!.authorId);
@@ -37,9 +38,8 @@ export const commentService = () => ({
          const comment = await prisma.comment.findUnique({
             where: { id }
         });
-        console.log("Comment achado", comment);
         if (!comment) {
-            throw new AppError('Comment not found', 404);
+            throw new NotFoundError('Comment not found');
         }
 
         checkPermission(user.role,"delete","comment", user.id, comment!.authorId);

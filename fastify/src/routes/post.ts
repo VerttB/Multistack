@@ -15,11 +15,45 @@ async function postRoutes(server: FastifyInstance) {
         }
     } ,getPosts);
 
-    server.get('/:id', getPostById);
+    server.get('/:id', 
+        {
+            schema: {
+                tags: ['Posts'],
+                summary: 'Get a post by ID',
+                description: 'Retrieve a single post by its ID.',
+                response: {
+                    200: PostResponseSchema,
+                    404: z.object({ message: z.string() }),
+                }
+            }
+        },getPostById);
 
-    server.post('',{ preHandler: verifyJWT }, createPost);
+    server.post('',{ 
+        preHandler: verifyJWT, 
+        schema: {
+            tags: ['Posts'],
+            summary: 'Create a new post',
+            description: 'Create a new post with the provided title, content, and author ID.',
+            response: {
+                201: PostResponseSchema,
+            }
+        }
+    }, createPost);
 
-    server.delete('/:id', { preHandler: verifyJWT }, deletePost);
+    server.delete('/:id', { 
+        preHandler: verifyJWT,
+        schema: {
+            tags: ['Posts'],
+            summary: 'Delete a post by ID',
+            description: 'Delete a post by its ID. Only the author of the post or an admin can delete the post.',
+            response: {
+                204: z.object({ message: z.string() }),
+                404: z.object({ message: z.string() }),
+            }
+        }
+    
+    
+    }, deletePost);
 
     server.patch('/:id',
         { preHandler: verifyJWT,

@@ -1,3 +1,4 @@
+import { NotFoundError, UnauthorizedError } from "../core/errors/exceptions";
 import prisma from "../core/utils/prismaClient";
 import bcrypt from "bcrypt";
 
@@ -11,8 +12,18 @@ export const authService = (() => ({
         }
         const isValid = await bcrypt.compare(password, user.password);
         if (!isValid) {
-            throw new Error('Invalid credentials');
+            throw new UnauthorizedError('Invalid credentials');
         }
        return user;
+    },
+    me: async (userId : string) => {
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            select: { id: true, name: true, email: true, role: true, createdAt: true, updatedAt: true }
+        });
+        if (!user) {
+            throw new NotFoundError('User not found');
+        }
+        return user;
     }
 }))

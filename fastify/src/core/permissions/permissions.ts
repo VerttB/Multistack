@@ -1,4 +1,5 @@
 import { AppError } from "../errors/AppError";
+import { UnauthorizedError } from "../errors/exceptions";
 
 enum Role {
     Admin = 'admin',
@@ -50,5 +51,5 @@ export const checkPermission = (role: string, action: Action, resource: Resource
             return true;
         }
     }
-    throw new AppError('Permission denied', 403);
+    throw new UnauthorizedError('Permission denied');
 };
