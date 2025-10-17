@@ -1,23 +1,22 @@
 import { CreateUserDTO, UpdateUserDTO } from "../dto/user";
-import prisma from "../core/utils/prismaClient";
-import fastifyJwt from "@fastify/jwt";
 import bcrypt from 'bcrypt';
-export const userService = () => ({
+import { FastifyInstance } from "fastify";
+export const userService = (fastify: FastifyInstance) => ({
 
   findAll: async () => {
-    const users = await prisma.user.findMany();
+    const users = await fastify.prisma.user.findMany();
     return users;
   },
 
   findOne: async (id: string) => {
-    return prisma.user.findUnique({
+    return fastify.prisma.user.findUnique({
       where: { id },
     });
   },
 
   create: async (data: CreateUserDTO) => {
     data.password = await bcrypt.hash(data.password, 10);
-    return prisma.user.create({
+    return fastify.prisma.user.create({
       data,
     });
 
@@ -26,7 +25,7 @@ export const userService = () => ({
 
   update: async (id: string, data: Partial<UpdateUserDTO>) => {
     const updatedAt = new Date();
-    return prisma.user.update({
+    return fastify.prisma.user.update({
       where: { id },
       data: {
         ...data,
@@ -36,7 +35,7 @@ export const userService = () => ({
   },
 
   delete: async (id:string) => {
-    return prisma.user.delete({
+    return fastify.prisma.user.delete({
       where: { id },
     });
   },

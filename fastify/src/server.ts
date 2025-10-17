@@ -9,7 +9,6 @@ import authRoutes from './routes/auth';
 import { registerErrorHandler } from './core/middleware/exceptionHandler';
 import { jsonSchemaTransform, serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
-import { z } from 'zod';
 
 dotenv.config();
 
