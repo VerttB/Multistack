@@ -3,23 +3,23 @@ import { z } from "zod";
 export const CreateUserSchema = z.object({
     name: z.string(),
     email: z.string().email(),
-    password: z.string().min(6).max(20),
+    password: z.string().min(6).max(100),
     role: z.enum(Role)
 }); 
 
 export const UpdateUserSchema = z.object({
     name: z.string().optional(),
-    email: z.email().optional(),
-    password: z.string().min(6).max(20).optional(),
+    email: z.string().email().optional(),
+    password: z.string().min(6).max(100).optional(),
     role: z.enum(Role).optional()
 });
 
 export const UserResponseSchema = z.object({
     id: z.number(),
     name: z.string(),
-    email: z.email(),
-    role: z.enum(Role),
+    email: z.string().email(),
     createdAt: z.date(),
+    updatedAt: z.date(),
 });
 
 export const DeleteUserSchema = z.object({ 

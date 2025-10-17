@@ -1,5 +1,6 @@
 import { CreateUserDTO, UpdateUserDTO } from "../dto/user";
 import prisma from "../core/utils/prismaClient";
+import fastifyJwt from "@fastify/jwt";
 import bcrypt from 'bcrypt';
 export const userService = () => ({
 

@@ -13,6 +13,10 @@ export const getPosts = async (request: FastifyRequest, reply: FastifyReply) => 
 export const getPostById = async (request: FastifyRequest, reply: FastifyReply) => {
     const { id } = request.params as { id: string };
     const post = await postsServiceInstance.findOne(id);
+    if (!post) {
+        reply.status(404).send({ message: 'Post not found' });
+        return;
+    }
    reply.status(200).send(post);
 }
 

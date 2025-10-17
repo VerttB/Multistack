@@ -3,7 +3,6 @@ import { checkPermission } from "../core/permissions/permissions";
 import prisma from "../core/utils/prismaClient";
 import { CreatePostDTO, UpdatePostDTO } from "../dto/post";
 import { AppError } from "../core/errors/AppError";
-import { NotFoundError } from "../core/errors/exceptions";
 
 export const postService = () => ({
     findAll: async () => {
@@ -23,13 +22,12 @@ export const postService = () => ({
     },
     update: async (id: string,user: { role: string, id: string }, data: UpdatePostDTO) => {
         const post = await prisma.post.findUnique({
-            where: { id },
-            omit: {
-                updatedAt: true, createdAt: true
-            }
+            where: { id }
         });
+        console.log("Post achado", post);
         if (!post) {
-            throw new NotFoundError('Post not found');
+            throw new AppError('Post not found', 404);
+            
         }
         checkPermission(user.role,"update","post", user.id, post!.authorId);
 
@@ -41,11 +39,10 @@ export const postService = () => ({
     delete: async (id: string, user: { role: string, id: string }) => {
         const post = await prisma.post.findUnique({
             where: { id }
-
         });
 
         if (!post) {
-            throw new NotFoundError('Post not found');
+            throw new AppError('Post not found', 404);
         }
 
         checkPermission(user.role,"delete","post", user.id, post!.authorId);
