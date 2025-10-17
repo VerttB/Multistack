@@ -1,24 +1,30 @@
-export interface CreatePostDTO {
-    title: string;
-    content: string;
-    authorId: string;
-}
+import { z } from 'zod';
 
-export interface UpdatePostDTO {
-    title?: string;
-    content?: string;
-    authorId?: string;
-}
+export const CreatePostSchema = z.object({
+    title: z.string(),
+    content: z.string(),
+    authorId: z.uuid(),
+}); 
 
-export interface PostResponseDTO {
-    id: string;
-    title: string;
-    content: string;
-    authorId: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
+export const UpdatePostSchema = z.object({
+    title: z.uuid().optional(),
+    content: z.string().optional(),
+    authorId: z.uuid().optional(),
+}).partial(); 
 
-export interface DeletePostDTO {
-    id: string;
-}
+export const PostResponseSchema = z.object({
+        id: z.uuid(),
+        title: z.string(),
+        content: z.string(),
+        authorId: z.uuid(),
+ 
+});
+
+export const DeletePostSchema = z.object({ 
+    id: z.uuid()
+});
+
+export type CreatePostDTO = z.infer<typeof CreatePostSchema>;
+export type UpdatePostDTO = z.infer<typeof UpdatePostSchema>;
+export type PostResponseDTO = z.infer<typeof PostResponseSchema>;
+export type DeletePostDTO = z.infer<typeof DeletePostSchema>;

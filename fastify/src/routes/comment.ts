@@ -1,7 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { getCommentById, getComments, createComment, deleteComment, updateComment } from "../controller/comment";
-import { verifyJWT } from "../core/config/jwt";
-
+import { verifyJWT } from "../core/middleware/jwtVerify";
 
 async function commentRoutes(server: FastifyInstance) {
     server.get('', getComments);

@@ -1,19 +1,30 @@
-export interface CreateCommentDTO {
-    content: string;
-    postId: string;
-    authorId: string;
-}
-export interface UpdateCommentDTO {
-    content?: string;
-    postId?: string;
-    authorId?: string;
-}
+import { z } from 'zod';
 
-export interface CommentResponseDTO {
-    id: string;
-    content: string;
-    postId: string;
-    authorId: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
+export const CreateCommentSchema = z.object({
+    content: z.string(),
+    postId: z.string(),
+    authorId: z.string(),
+});
+
+export const UpdateCommentSchema = z.object({
+    content: z.uuid().optional(),
+    postId: z.string().optional(),
+    authorId: z.string().optional(),
+}).partial();
+
+export const CommentResponseSchema = z.object({
+    id: z.uuid(),
+    content: z.string(),
+    postId: z.string(),
+    authorId: z.string(),
+    createdAt: z.date(),
+    updatedAt: z.date(),
+});
+export const DeleteCommentSchema = z.object({ 
+    id: z.string()
+});     
+
+export type CreateCommentDTO = z.infer<typeof CreateCommentSchema>;
+export type UpdateCommentDTO = z.infer<typeof UpdateCommentSchema>; 
+export type CommentResponseDTO = z.infer<typeof CommentResponseSchema>;
+export type DeleteCommentDTO = z.infer<typeof DeleteCommentSchema>;

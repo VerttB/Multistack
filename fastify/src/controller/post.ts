@@ -30,17 +30,18 @@ export const createPost = async (request: FastifyRequest, reply: FastifyReply) =
     reply.status(201).send(createdPost);
 }
 
-export const updatePost = async (request: FastifyRequest, reply: FastifyReply) => {
-    const { id } = request.params as { id: string };
-    const user = request.user as { id: string, email: string, role: string };
-    checkPermission(user.role, 'update', 'post', user.id);
-    const updateData = request.body as Partial<CreatePostDTO>;
-    const updatedPost = await postsServiceInstance.update(id, user.id, updateData);
-    reply.status(200).send(updatedPost);
+export const updatePost = async (request: FastifyRequest, reply: FastifyReply) => { 
+        const { id } = request.params as { id: string };
+        const user = request.user as { id: string, email: string, role: string };
+        const updateData = request.body as Partial<CreatePostDTO>;
+        const updatedPost = await postsServiceInstance.update(id, user, updateData);
+        reply.status(200).send(updatedPost);
+    
 }
 
 export const deletePost = async (request: FastifyRequest, reply: FastifyReply) => {
     const { id } = request.params as { id: string };
-    await postsServiceInstance.delete(id);
+    const user = request.user as { id: string, email: string, role: string };
+    await postsServiceInstance.delete(id, user);
     reply.status(204).send();
 }

@@ -6,12 +6,17 @@ import commentRoutes from './routes/comment';
 import jwt from '@fastify/jwt'
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth';
+import { registerErrorHandler } from './core/middleware/exceptionHandler';
+import { jsonSchemaTransform, serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
+import type { ZodTypeProvider } from 'fastify-type-provider-zod';
+import { z } from 'zod';
 
 dotenv.config();
 
-const fastify = Fastify({ logger: { level: 'info' } });
+const fastify = Fastify({ logger: { level: 'info' } }).withTypeProvider<ZodTypeProvider>();
 
-
+fastify.setValidatorCompiler(validatorCompiler);
+fastify.setSerializerCompiler(serializerCompiler);
 
 fastify.register(jwt, {
   secret: process.env.JWT_SECRET!,
@@ -23,7 +28,7 @@ fastify.register(jwt, {
 
 
  fastify.register(require('@fastify/swagger'), {
-      swagger: {
+      openapi: {
         info: {
           title: 'My API Documentation',
           description: 'API documentation for my Fastify application',
@@ -33,21 +38,26 @@ fastify.register(jwt, {
             { name: 'Posts', description: 'Post related endpoints' },
             { name: 'Comments', description: 'Comment related endpoints' },
           ],
+ 
         },
-            },
+      },
+      transform: jsonSchemaTransform,
+      exposeRoute: true,
     });
 
 fastify.register(require('@fastify/swagger-ui'), {
-      routePrefix: '/documentation', // Access Swagger UI at /documentation
+      routePrefix: '/docs', 
     });
 
 
+
 fastify.register(prismaPlugin);
-fastify.register(authRoutes, { prefix: '/auth' });
 fastify.register(userRoutes, { prefix: '/users' , name: 'Users' });
 fastify.register(postRoutes, { prefix: '/posts' });
 fastify.register(commentRoutes, { prefix: '/comments' });
+fastify.register(authRoutes, { prefix: '/auth' });
 
+registerErrorHandler(fastify);
 
 const start = async () => {
   try {

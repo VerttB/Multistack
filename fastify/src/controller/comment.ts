@@ -26,13 +26,15 @@ export const createComment = async (request: FastifyRequest, reply: FastifyReply
 
 export const updateComment = async (request: FastifyRequest, reply: FastifyReply) => {
     const { id } = request.params as { id: string };
+    const user = request.user as { id: string, email: string, role: string };
     const updateData = request.body as Partial<UpdateCommentDTO>;
-    const updatedComment = await commentServiceInstance.update(id, updateData);
+    const updatedComment = await commentServiceInstance.update(id, user, updateData);
     reply.status(200).send(updatedComment);
 }
 
 export const deleteComment = async (request: FastifyRequest, reply: FastifyReply) => {
     const { id } = request.params as { id: string };
-    await commentServiceInstance.delete(id);
+    const user = request.user as { id: string, email: string, role: string };
+    await commentServiceInstance.delete(id, user);
     reply.status(204).send({ message: 'Comment deleted successfully' });
 }
