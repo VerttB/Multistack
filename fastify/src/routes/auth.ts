@@ -16,7 +16,7 @@ async function authRoutes(server: FastifyInstance) {
             }
         }
     }, login);
-    server.post('/me', {
+    server.get('/me', {
         schema: {
             tags: ['Auth'],
             summary: 'Get current user',

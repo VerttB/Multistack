@@ -8,7 +8,7 @@ export const authService = ((fastify: FastifyInstance) => ({
             where: { email }
         });
         if (!user) {
-            throw new Error('User not found');
+            throw new UnauthorizedError('Invalid Credentials');
         }
         const isValid = await bcrypt.compare(password, user.password);
         if (!isValid) {

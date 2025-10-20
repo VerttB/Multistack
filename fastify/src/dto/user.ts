@@ -15,9 +15,9 @@ export const UpdateUserSchema = z.object({
 });
 
 export const UserResponseSchema = z.object({
-    id: z.number(),
+    id: z.uuid(),
     name: z.string(),
-    email: z.string().email(),
+    email: z.email(),
     createdAt: z.date(),
     updatedAt: z.date(),
 });
