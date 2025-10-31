@@ -2,14 +2,14 @@ import { Role } from "@prisma/client";
 import { z } from "zod";
 export const CreateUserSchema = z.object({
     name: z.string(),
-    email: z.string().email(),
+    email: z.email(),
     password: z.string().min(6).max(100),
     role: z.enum(Role)
 }); 
 
 export const UpdateUserSchema = z.object({
     name: z.string().optional(),
-    email: z.string().email().optional(),
+    email: z.email().optional(),
     password: z.string().min(6).max(100).optional(),
     role: z.enum(Role).optional()
 });

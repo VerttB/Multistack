@@ -23,7 +23,23 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   posts     Post[]
+  likes     Like[]
   comments  Comment[]
+  following Follower[] @relation("Following")
+  followers Follower[] @relation("Followers")
+}
+
+model Follower {
+  id          String @id @default(uuid()) @db.Uuid
+  followerId  String @db.Uuid
+  followingId String @db.Uuid
+
+  follower  User @relation("Following", fields: [followerId], references: [id])
+  following User @relation("Followers", fields: [followingId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([followerId, followingId]) // impede duplicidade
 }
 
 model Post {
@@ -33,6 +49,7 @@ model Post {
   published Boolean  @default(false)
   authorId  String   @db.Uuid
   author    User     @relation(fields: [authorId], references: [id])
+  likes     Like[]
   comments  Comment[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -48,3 +65,13 @@ model Comment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Like {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id])
+  postId    String   @db.Uuid
+  post      Post     @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now())
+}
+
