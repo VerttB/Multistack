@@ -15,5 +15,5 @@
       "./src/core/types"
     ]
   },
-  "include": ["src", "prisma"]
+  "include": ["src", "src/prisma"]
 }
